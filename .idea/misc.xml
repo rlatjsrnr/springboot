@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/autoconfig" />
+    <file type="web" url="file://$PROJECT_DIR$/boot" />
+    <file type="web" url="file://$PROJECT_DIR$/embed" />
+    <file type="web" url="file://$PROJECT_DIR$/lib" />
+    <file type="web" url="file://$PROJECT_DIR$/memory/memory-v1" />
+    <file type="web" url="file://$PROJECT_DIR$/memory/memory-v2" />
+    <file type="web" url="file://$PROJECT_DIR$/memory/project-v1" />
+    <file type="web" url="file://$PROJECT_DIR$/memory/project-v2" />
+    <file type="web" url="file://$PROJECT_DIR$/server" />
+  </component>
+  <component name="ProjectRootManager">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>
