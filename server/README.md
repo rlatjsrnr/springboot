@@ -54,25 +54,45 @@ WAS에게 실행할 초기화 클래스를 알려줌
     - 여기에서 HelloServlet을 등록해줌
   
   #### 애플리케이션 초기화 과정
-  1. @HandlesTypes 애노테이션에 애플리케이션 초기화 인터페이스를 지정한다.<br/>
-      여기서는 앞서 만든 AppInit.class 인터페이스를 지정했다.
-  2. 서블릿 컨테이너 초기화( ServletContainerInitializer )는 파라미터로 넘어오는 Set<Class<?>> c 에 애플리케이션 초기화 인터페이스      의 구현체들을 모두 찾아서 클래스 정보로 전달한다.<br/>
-      여기서는 @HandlesTypes(AppInit.class) 를 지정했으므로 AppInit.class 의 구현체인 AppInitV1Servlet.class 정보가 전달된다. <br/>
-      참고로 객체 인스턴스가 아니라 클래스 정보를 전달하기 때문에 실행하려면 객체를 생성해서 사용해야 한다.
-  3. appInitClass.getDeclaredConstructor().newInstance() 리플렉션을 사용해서 객체를 생성한다. 참고로 이 코드는
-     new AppInitV1Servlet() 과 같다 생각하면 된다.
-  4. appInit.onStartup(ctx)
-      애플리케이션 초기화 코드를 직접 실행하면서 서블릿 컨테이너 정보가 담긴 ctx 도 함께 전달한다.
+  1. @HandlesTypes 애노테이션에 애플리케이션 초기화 인터페이스를 지정<br/>
+      여기서는 앞서 만든 AppInit.class 인터페이스를 지정
+  2. 서블릿 컨테이너 초기화( ServletContainerInitializer )는 파라미터로 넘어오는 Set<Class<?>> c 에 애플리케이션 초기화 인터페이스의 구현체들을 모두 찾아서 클래스 정보로 전달<br/>
+      여기서는 @HandlesTypes(AppInit.class) 를 지정했으므로 AppInit.class 의 구현체인 AppInitV1Servlet.class 정보가 전달 <br/>
+      참고로 객체 인스턴스가 아니라 클래스 정보를 전달하기 때문에 실행하려면 객체를 생성해서 사용해야 함
+  3. appInitClass.getDeclaredConstructor().newInstance() 리플렉션을 사용해서 객체를 생성<br/>
+     참고로 이 코드는 new AppInitV1Servlet() 과 같음
+  5. appInit.onStartup(ctx)
+      애플리케이션 초기화 코드를 직접 실행하면서 서블릿 컨테이너 정보가 담긴 ctx 도 함께 전달
 
 #### 애플리캐이션 초기화를 하는 이유
   - 편리함 <br/>
     서블릿 컨테이너를 초기화 하려면 ServletContainerInitializer 인터페이스를 구현한 코드를
-    만들어야 한다. 여기에 추가로 META-INF/services/
-    jakarta.servlet.ServletContainerInitializer 파일에 해당 코드를 직접 지정해주어야 한다.
-    애플리케이션 초기화는 특정 인터페이스만 구현하면 된다.
+    만들어야 함<br/> 여기에 추가로 META-INF/services/jakarta.servlet.ServletContainerInitializer 파일에 해당 코드를 직접 지정해주어야 함<br/>
+    애플리케이션 초기화는 특정 인터페이스만 구현하면 됨
     
  - 의존성 <br/>
-    애플리케이션 초기화는 서블릿 컨테이너에 상관없이 원하는 모양으로 인터페이스를 만들 수 있다.
-    이를 통해 애플리케이션 초기화 코드가 서블릿 컨테이너에 대한 의존을 줄일 수 있다. 특히
-    ServletContext ctx 가 필요없는 애플리케이션 초기화 코드라면 의존을 완전히 제거할 수도 있다.
-  
+    애플리케이션 초기화는 서블릿 컨테이너에 상관없이 원하는 모양으로 인터페이스를 만들 수 있음<br/>
+    이를 통해 애플리케이션 초기화 코드가 서블릿 컨테이너에 대한 의존을 줄일 수 있음<br/>
+    특히 ServletContext ctx 가 필요없는 애플리케이션 초기화 코드라면 의존을 완전히 제거 가능
+
+## 스프링 컨테이너 등록
+![image](https://github.com/rlatjsrnr/springboot/assets/137128415/a4893581-4524-459e-82d8-ba66109effe8)
+
+ - 스프링 컨테이너 생성
+ - Spring MVC Controller를 스프링 컨테이너에 빈으로 등록
+ - Spring MVC를 사용하는데 필요한 dispatcherServlet을 서블릿 컨테이너에 등록
+
+#### 스프링 컨테이너 생성
+AnnotationConfigWebApplicationContext 이 클래스가 스프링 컨테이너<br/>
+부모를 따라가 보면 ApplicationContext 인터페이스를 확인할 수 있음<br/>
+어노테이션 기반 설정과 웹 기능을 지원하는 스프링 컨테이너
+
+#### dispatcherServlet 생성, 스프링 컨테이너 연결
+new DispatcherServlet(appContext) : dispatcherServlet을 생성하면서 스프링 컨테이너를 전달해 주면 연결 됨<br/>
+
+#### dispatcherSevlet을 서블릿 컨테이너에 등록
+servletContext.addServlet("dispatcherV2", dispatcher) : dispatcher을 서블릿 컨테이너에 등록함<br/>
+servlet.addMapping("/spring/*") : /spring과 그 하위 요청을 해당 서블릿이 처리 함<br/>
+
+
+
