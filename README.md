@@ -2,4 +2,4 @@
 
 Java 17, Spring 3.0, IntelliJ
 
-server -> embed -> boot ->
+server -> embed -> boot -> lib
