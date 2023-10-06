@@ -2,4 +2,4 @@
 
 Java 17, Spring 3.0, IntelliJ
 
-server -> embed -> boot -> lib -> autoconfig
+server -> embed -> boot -> lib -> autoconfig -> memory
